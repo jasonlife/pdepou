@@ -1,0 +1,52 @@
+### SublimeText ###
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+
+# Basics
+*.py[cod]
+__pycache__
+
+# Logs
+*.log
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+htmlcov
+.cache
+
+# Translations
+*.mo
+*.pot
+
+# Pycharm
+.idea
+
+# npm
+node_modules/
+
+# Virtual environments
+.env
+
+# User-uploaded media
+/media/
+
+# Static generated
+/static/
+
+# Hitch directory
+tests/.hitch
+
+# Docs
+/docs/
+
+# Logs
+/logs/
+
+# Fabbric properties
+/utils/properties.py
