@@ -47,7 +47,7 @@ def requirements():
     """ pip install -r requirements.txt """
     with cd(env.APP_DIR):
         with prefix(ACTIVATE_VIRTUALENV):
-            run('pip install -r requirements.txt')
+            run('pip install -r requirements/production.txt')
 
 
 def migrate():
