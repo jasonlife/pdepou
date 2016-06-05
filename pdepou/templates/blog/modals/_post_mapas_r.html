@@ -1,0 +1,89 @@
+<!-- Modal post generación de mapas -->
+
+{% load staticfiles %}
+
+<div class="portfolio-modal modal fade" id="modal_{{ post.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <a href="" onclick="location.hash='#posts'" class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl"></div>
+            </div>
+        </a>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="modal-body">
+                        <h2>{{ post.name }}</h2>
+                        <p class="item-intro text-muted">{{ post.technology }}</p>
+                        <img class="img-responsive img-centered" style="width: 350px; height: 275px" src="{{ post.image.url }}" alt="Post image">
+                        <p class="row">
+                            <p>
+                            En este post voy a introducir la representación de información geográfica con el lenguaje <a href="https://www.r-project.org/" target="_blank">R</a>.
+                            R es un avanzado sistema de computación estadística con gráficos de calidad que se encuentra
+                            disponible gratuitamente para la mayoría de plataformas. R no es simplemente un conjunto
+                            de comandos, admite programación, y su constante crecimiento le ha llevado a ser una de las
+                            mejores herramientas para el análisis de datos. <br>
+                            Gracias al bum que se esta viviendo actualmente con la <a href="https://es.wikipedia.org/wiki/Miner%C3%ADa_de_datos" target="_blank">minería de datos</a>, el lenguaje R ha cobrado
+                            mucha fuerza y es una de las mejores alternativas para la realización de esta práctica. En este
+                            post lo utilizaré para generar diferentes tipos de mapas para la representación de información
+                            geográfica. <br>
+                            La información geográfica de la que disponía para representar en los mapas estaba en formato GPX.
+                            </p>
+                            <p>
+                            <h5 style="text-align: left">1.- Mapa de Google</h5>
+                            <div gist="https://gist.github.com/bertini36/f2d7adf92acd767591bb.js"></div>
+                            <figure>
+                                <img src="{% static 'img/posts/post_mapas_r/mapa_google.png' %}" style="text-align: center; width: 350px; height: 300px" alt="Google map representation">
+                                <figcaption><small>Representación de la información geográfica sobre un mapa de Google</small></figcaption>
+                            </figure>
+                            </p>
+                            <p>
+                            <h5 style="text-align: left">2.- Mapa de colisiones</h5>
+                            Una forma de visualizar la colisión de puntos puede ser oscureciéndolos. En este mapa se pueden
+                            apreciar fácilmente las rutas más transitadas. Además la información no esta representada
+                            sobre un mapa sino que es la propia información la que genera la silueta de la isla de Mallorca.
+                            </p>
+                            <p>
+                            <div gist="https://gist.github.com/bertini36/18daed8d2e15b257b7e4.js"></div>
+                            <figure>
+                                <img src="{% static 'img/posts/post_mapas_r/mapa_rutas.png' %}" style="text-align: center; width: 400px; height: 350px" alt="Colision representation">
+                                <figcaption><small>Representación de colisiones en la información geográfica</small></figcaption>
+                            </figure>
+                            </p>
+                            <p>
+                            <h5 style="text-align: left">3.- Mapa de calor</h5>
+                            Cuando se dispone de una gran cantidad de puntos, mostrar cada entidad de forma individual
+                            a menudo no es útil. En este escenario, los puntos a menudo se superponen, lo que hace difícil
+                            distinguirlos. Incluso cuando no se superponen, normalmente es difícil o imposible extraer
+                            información significativa visualmente. Una forma de resolver esta cuestión es generar un mapa
+                            de calor. Un mapa de calor representa la densidad geográfica de puntos de un mapa utilizando
+                            áreas de color para representar los puntos.
+                            </p>
+                            <p>
+                            <div gist="https://gist.github.com/bertini36/ff7733a29453db905f85.js"></div>
+                            </p>
+                            <p>
+                            En mi caso, las partes más rojizas indican las zonas más transitadas.
+                            </p>
+                            <p>
+                            <figure>
+                                <img src="{% static 'img/posts/post_mapas_r/mapa_calor.png' %}" style="text-align: center; width: 400px; height: 350px" alt="Hot map">
+                                <figcaption><small>Mapa de calor</small></figcaption>
+                            </figure>
+                            </p>
+                        </div>
+                        <ul class="list-inline">
+                            <li>Fecha: 6/12/2015</li>
+                            <li>Autor: Alberto Pou Quirós</li>
+                        </ul>
+
+                        <!-- Comments -->
+                        <div class="row">
+                            {% include 'blog/partials/comments.html' with post=post %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

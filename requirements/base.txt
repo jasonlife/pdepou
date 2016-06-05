@@ -1,0 +1,36 @@
+# Django
+django==1.9.5
+
+# Configuration
+django-environ==0.4.0
+
+# Database
+psycopg2==2.6.1
+
+# Dates
+python-dateutil==2.5.3
+
+# Compatibility
+six==1.10.0
+
+# Redis
+django-redis==4.4.2
+redis==2.10.5
+
+# HTTP
+requests==2.9.1
+
+# Images
+Pillow==3.2.0
+
+# Templates
+django-sekizai==0.9.0
+
+# Statics
+django-pipeline==1.6.4
+
+# Fake admin
+django-admin-honeypot==1.0.0
+
+# Mixins Class Based Views
+django-braces==1.8.1

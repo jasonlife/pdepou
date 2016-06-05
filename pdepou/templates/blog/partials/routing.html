@@ -1,0 +1,37 @@
+<!-- Sammy router JavaScript declaration -->
+
+<script type="text/javascript">
+    var router = Sammy();
+    var $body = $("html, body");
+    router.get("#posts", function() {
+        $body.stop().animate({
+            scrollTop: $("#posts").offset().top
+        }, 1500, "easeInOutExpo");
+    });
+    router.get("#about-me", function() {
+        $body.stop().animate({
+            scrollTop: $("#about-me").offset().top
+        }, 1500, "easeInOutExpo");
+    });
+    router.get("#contact", function() {
+        $body.stop().animate({
+            scrollTop: $("#contact").offset().top
+        }, 1500, "easeInOutExpo");
+    });
+    {% for post in posts %}
+        router.get("#{{ post.slug }}", function() {
+            utils.get_post("{{ post.id }}");
+        });
+    {% endfor %}
+    router.get("#", function() {
+        $body.stop().animate({
+            scrollTop: $body.offset().top
+        }, 1500, "easeInOutExpo");
+    });
+    router.get("", function(){
+        $body.stop().animate({
+            scrollTop: $body.offset().top
+        }, 1500, "easeInOutExpo");
+    });
+    router.run();
+</script>

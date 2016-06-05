@@ -1,0 +1,145 @@
+<!-- Modal post web scraping anónimo -->
+
+{% load staticfiles %}
+
+<div class="portfolio-modal modal fade" id="modal_{{ post.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <a href="" onclick="location.hash='#posts'" class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl"></div>
+            </div>
+        </a>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="modal-body">
+                        <h2>{{ post.name }}</h2>
+                        <p class="item-intro text-muted">{{ post.technology }}</p>
+                        <img class="img-responsive img-centered" style="width: 350px; height: 275px" src="{{ post.image.url }}" alt="Post image">
+                        <div class="row">
+                            <p>
+                            Muchas veces, la creación de una plataforma o la realización de un estudio puede requerir información contenida en diferentes sitios web.
+                            Esta información suele ser accesible por los usuarios fácilmente. El problema aparece cuando se necesita una gran cantidad. En este caso,
+                            acceder página a página manualmente para obtener la información puede ser un trabajo muy laborioso.
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p>
+                            El Web Scraping consiste en automatizar la obtención de datos procedentes de páginas web. Se trata de programas (web crawlers) que navegan
+                            de forma automática por las páginas y almacenan la información requerida.
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p>
+                            Existen una gran cantidad de librerías y herramientas para hacer Web Scraping. Por ejemplo, para el lenguaje Python disponemos de la librería
+                            <a href="http://scrapy.org/" target="_blank">Scrapy</a> y para Java tenemos <a href="http://htmlunit.sourceforge.net/" target="_blank">HTMLUnit</a>.
+                            Estas librerías disponen de una sintaxis de selectores (tipo CSS o X-Path) que permiten la realización de consultas al DOM con el objetivo de acceder
+                            al contenido de etiquetas concretas del archivo HTML. <br>
+                            No obstante, en este post no explicaré como obtener datos de forma convencional con estas herramientras, sino que me centraré en explicar el Web Scraping anónimo.
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p>
+                            Uno de los principales problemas de solicitar mucha información a un servidor web es que éste puede identificar dicho procedimiento como un
+                            <a href="https://es.wikipedia.org/wiki/Ataque_de_denegaci%C3%B3n_de_servicio" target="_blank">ataque DDoS</a>.
+                            Estos ataques pueden detectarse mediante la identificación de las direcciones IPs de los equipos que realizan peticiones a un servidor.
+                            De esta manera, si el servidor identifica que una determinada dirección IP realiza una cantidad elevada de peticiones en un intérvalo muy reducido de tiempo
+                            se le deniega el acceso temporal o permanentemente. <br>
+                            A continuación explicaré dos formas de evitar que nos restrinjan el acceso a la información de un servidor.
+                            </p>
+                        </div>
+                        <div class="row">
+                            <h5 style="text-align: left">1.- Mediante servidores proxy</h5>
+                            <p>
+                            Un servidor proxy es un intermediario entre el cliente y el servidor. El cliente realiza la petición al servidor proxy y éste, seguidamente, a la web
+                            objetivo. Así, la web, registra la dirección IP del servidor proxy y no la del cliente. Es decir, nuestra dirección IP queda enmascarada con la del servidor
+                            proxy.
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p>
+                                <figure>
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/post_webscraping_anonimo/proxy_img.jpg' %}"
+                                         alt="Proxy flow">
+                                    <figcaption><small>Flujo de peticiones con un servidor proxy de intermediario</small></figcaption>
+                                </figure>
+                            </p>
+                            <p>
+                            En primer lugar elaboramos una lista de <a href="http://proxylist.hidemyass.com/" target="_blank">servidores proxy gratuitos</a> para que, cada vez que se nos deniegue el
+                            servicio por IP, el web crawler utilice el siguiente servidor proxy de la lista para enmascarar nuestra dirección IP. <br>
+                            A continuación se muestra un prototipo mediante Python y su librería <a href="http://docs.python-requests.org/en/latest/" target="_blank">requests</a>.
+                            <div class="well" style="text-align: left">
+                                Requisitos: <br>
+                                <i>pip install requests</i>
+                            </div>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div gist="https://gist.github.com/bertini36/9f47f7cca3221603444d.js"></div>
+                        </div>
+                        <div class="row">
+                            <p>
+                            Este código permite la descarga de diferentes archivos GPX de la página <a href="http://es.wikiloc.com/wikiloc/home.do" target="_blank">Wikiloc</a>.
+                            Para ello el script requiere de:
+                            <ul style="text-align: left">
+                                <li>Una lista de identificadores de las rutas a descargar.</li>
+                                <li>Una lista de usuarios de la plataforma Wikiloc (Wikiloc solo permite la descarga de los archivos GPX a sus usuarios).</li>
+                                <li>Una lista de servidores proxy.</li>
+                            </ul>
+                            </p>
+                            <p>
+                            El web crawler va descargando los diferentes archivos GPX de la lista. En el caso de tener problemas en la descarga de algún archivo,
+                            éste puede ser debido a un baneo por usuario o un baneo por IP.<br>
+                            En el caso de ser un baneo por usuario el web crawler inicia sesión nuevamente en la plataforma con otro usuario. Por otro lado,
+                            si el baneo es por IP pasa a utilizar el siguiente servidor proxy de la lista. <br>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <h5 style="text-align: left">2.- Utilizando la red Tor</h5>
+                            <p>
+                            <a href="https://www.torproject.org/" target="_blank">La red Tor</a> permite navegar por internet con total anonimato. Normalmente cuando te conectas a una página web la petición va directamente
+                            de tu ordenador al servidor de la web objetivo. Tor basa su funcionamiento en un cifrado por capas. La petición circula por diferentes
+                            servidores y cada uno aporta una parte del cifrado total del contenido de la petición. Si quieres saber más sobre el funcionamiento de
+                            esta red puedes visitar este <a href="http://www.genbeta.com/seguridad/como-funciona-la-red-tor" target="_blank">enlace</a>.
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p>
+                            A continuación tenéis un pequeño programa en Python que utiliza la red Tor y la librería requests para realizar peticiones anónimas.
+                            Este script requiere la instalación de la red Tor, la librería requests y la librería pysocks. Pysocks proporciona una interfaz de sockets
+                            como estándar para realizar conexiones con Python.
+                            <div class="well" style="text-align: left">
+                                Requisitos: <br>
+                                <i>sudo apt-get install tor</i> <br>
+                                <i>pip install requests</i> <br>
+                                <i>pip install pysocks</i>
+                            </div>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div gist="https://gist.github.com/bertini36/5d2ed0b921b379fef2f6.js"></div>
+                        </div>
+                        <div class="row">
+                            <p>
+                            Especificamos el puerto 9050 puesto que es con el que trabaja por defecto la red Tor.
+                            Si ejecutamos este programa veremos que la IP pública que nos detecta no es la misma que si accedemos a la web
+                            <a href="http://www.vermiip.es/" target="_blank">vermiip</a> desde nuestro navegador. De esta forma conseguimos que el servidor objetivo
+                            no pueda saber desde dónde ni quién esta realizando la petición.
+                            </p>
+                        </div>
+                        <ul class="list-inline">
+                            <li>Fecha: 20/09/2015</li>
+                            <li>Autor: Alberto Pou Quirós</li>
+                        </ul>
+
+                        <!-- Comments -->
+                        <div class="row">
+                            {% include 'blog/partials/comments.html' with post=post %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

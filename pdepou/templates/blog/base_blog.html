@@ -1,0 +1,98 @@
+<!-- Base template blog -->
+
+{% extends "base.html" %}
+
+{% load staticfiles pipeline %}
+
+
+{% block headers %}
+    {{ block.super }}
+
+    <meta name="description" content="Blog de informática">
+
+    <!-- Open Graph Data -->
+    <meta property="og:title" content="P de Pou"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="http://www.pdepou.com"/>
+    <meta property="og:description" content="Blog de informática"/>
+    <meta property="og:site_name" content="P de Pou"/>
+    <meta property="og:image" content="{% static 'img/black_logo.png' %}"/>
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="P de Pou. Blog de informática">
+    <meta name="twitter:title" content="P de Pou">
+    <meta name="twitter:description" content="Blog de informática">
+    <meta name="twitter:creator" content="@bertini_36">
+{% endblock headers %}
+
+
+{% block styles %}
+    {{ block.super }}
+
+    <!-- Pnotify for notifications -->
+    <link rel="stylesheet" href="{% static 'css/lib/pnotify.min.css' %}">
+
+    <!-- CSS libs -->
+    {% stylesheet "styles" %}
+{% endblock styles %}
+
+
+{% block content %}
+    <div id="page-top" class="index">
+        <!-- Menu -->
+        {% include "blog/partials/menu.html" %}
+
+        <!-- Header -->
+        <header>
+            <div class="container">
+                <div class="intro-text">
+                    <div class="intro-heading">P de Pou</div>
+                    <div class="intro-lead-in">Blog de informática</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Posts section -->
+        <section id="posts" class="bg-light-gray">
+            {% include "blog/partials/posts.html" with posts=posts %}
+        </section>
+
+        <!-- About me section -->
+        <section id="about-me" class="bg-light-gray">
+            {%  include "blog/partials/about_me.html" %}
+        </section>
+
+        <!-- Contact section -->
+        <section id="contact">
+            {% include "blog/partials/contact.html" %}
+        </section>
+
+        <!-- Here it will be added de different post modals templates -->
+        <div id="modals"></div>
+
+        <!-- Footer -->
+        {% include 'blog/partials/footer.html' %}
+    </div>
+{% endblock content %}
+
+
+{% block scripts %}
+    {{ block.super }}
+
+    <!-- Sammy -->
+    <script src="{% static 'js/lib/sammy-latest.min.js' %}"></script>
+
+    <!-- Extra libs -->
+    <script src="{% static 'js/lib/jquery.easing.min.js' %}"></script>
+    <script src="{% static 'js/lib/cbpAnimatedHeader.min.js' %}"></script>
+    <script src="{% static 'js/lib/pnotify.min.js' %}"></script>
+
+    <!-- Utils -->
+    <script src="{% static 'js/utils.js' %}"></script>
+
+    <!-- Own Javascript comprised -->
+    {% javascript "scripts" %}
+
+    <!-- Routing -->
+    {% include "blog/partials/routing.html" with posts=posts %}
+{% endblock scripts %}

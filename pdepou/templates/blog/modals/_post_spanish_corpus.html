@@ -1,0 +1,69 @@
+<!-- Modal post text mining en castellano -->
+
+<div class="portfolio-modal modal fade" id="modal_{{ post.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <a href="" onclick="location.hash='#posts'" class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl"></div>
+            </div>
+        </a>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="modal-body">
+                        <h2>{{ post.name }}</h2>
+                        <p class="item-intro text-muted">{{ post.technology }}</p>
+                        <img class="img-responsive img-centered" src="{{ post.image.url }}" alt="Post image">
+                        <div class="row">
+                            <p>
+                            Hace poco en el trabajo me pidieron desarrollar el prototipo de una inteligencia
+                            artificial que permitiera a la aplicación <a href="https://txerpa.com/" target="_blank">Txerpa</a>
+                            aprender sobre el usuario para poder sugerirle determinadas acciones. Parte de este aprendizaje
+                            debía hacerse en base al texto que inserta el usuario en la aplicación, es decir, debía hacer
+                            <a href="https://es.wikipedia.org/wiki/Miner%C3%ADa_de_textos" target="_blank">Text Mining</a> a la información textual que contenía la aplicación.
+                            </p>
+                            <p>
+                            Para Python existen diversas librerías que nos pueden servir para este propósito pero,
+                            principalmente, están pensadas para la lengua inglesa. La causa de que estas librerías den un resultado
+                            mucho mejor con textos en inglés es debido principalmente al tamaño de los diccionarios. Los
+                            diccionarios de español tienen un número de palabras mucho menor que los diccionarios ingleses.
+                            Tras investigar las diversas herramientas que podía utilizar decidí que la mejor solución era
+                            unificar en una única librería la funcionalidad de diversas librerías de Text Mining.
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p>
+                            El resultado fué la librería <a href="https://github.com/bertini36/SpanishCorpus" target="_blank">SpanishCorpus</a>,
+                            la cual unifica la funcionalidad de las librerías <a href="http://www.nltk.org/" target="_blank">NLTK</a>,
+                            <a href="http://www.clips.ua.ac.be/pattern" target="_blank">Pattern</a> y
+                            <a href="http://pythonhosted.org/pyenchant/" target="_blank">PyEnchant</a> y gracias a la cooperación
+                            de éstas permite obtener unos corpus de palabras en español mucho mas fiables.
+                            </p>
+                            <p>
+                            A continuación tenéis un ejemplo del uso de la librería.
+                            <div class="well" style="text-align: left">
+                                Requisitos:
+                                <ul>
+                                    <li><i>pip install -r requirements.txt</i></li>
+                                </ul>
+                            </div>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div gist="https://gist.github.com/bertini36/26f89f76252a7836eead.js"></div>
+                        </div>
+                        <ul class="list-inline">
+                            <li>Fecha: 29/10/2015</li>
+                            <li>Autor: Alberto Pou Quirós</li>
+                        </ul>
+
+                        <!-- Comments -->
+                        <div class="row">
+                            {% include 'blog/partials/comments.html' with post=post %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

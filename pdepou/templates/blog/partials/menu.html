@@ -1,0 +1,33 @@
+<!-- Template menu -->
+
+{% load staticfiles %}
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <!-- Menú para el movil -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="#" class="page-scroll hidden-xs">
+                <img src="{% static 'img/logo.png' %}">
+            </a>
+            <a href="#" class="page-scroll visible-xs">
+                <img src="{% static 'img/logo.png' %}" style="width: 30px; height: 35px; margin-left: 5%; margin-top: 2%">
+            </a>
+        </div>
+
+        <!-- Menú pantalla grande -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden"><a class="page-scroll" href="#"></a></li>
+                <li><a class="page-scroll" href="#posts">Posts</a></li>
+                <li><a class="page-scroll" href="#about-me">Sobre mi</a></li>
+                <li><a class="page-scroll" href="#contact">Contacta</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

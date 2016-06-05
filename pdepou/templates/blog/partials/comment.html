@@ -1,0 +1,18 @@
+<!-- Comment template -->
+
+{% load staticfiles %}
+
+<article class="comment">
+    <a class="comment-img" href="javascript: void(0)">
+        <img src="{% static 'img/user.png' %}" alt="User logo" width="50" height="50">
+    </a>
+    <div class="comment-body">
+        <div class="text">
+            {{ comment.text }}
+        </div>
+        <p class="attribution">
+            Escrito por <a href="javascript: void(0)">{{ comment.contact.name }}</a>
+            día {{ comment.created | date:"d/m/Y" }}
+        </p>
+    </div>
+</article>

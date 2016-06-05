@@ -1,0 +1,96 @@
+<!-- Modal post geocoder de Mallorca -->
+
+<div class="portfolio-modal modal fade" id="modal_{{ post.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <a href="" onclick="location.hash='#posts'" class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl"></div>
+            </div>
+        </a>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="modal-body">
+                        <h2>{{ post.name }}</h2>
+                        <p class="item-intro text-muted">{{ post.technology }}</p>
+                        <img class="img-responsive img-centered" style="width: 350px; height: 275px" src="{{ post.image.url }}" alt="Post image">
+                        <div class="row">
+                            <p>
+                            Actualmente las aplicaciones basan mucha de su funcionalidad en la información geográfica. Las redes
+                            sociales: Facebook, Twitter, Instagram, ... utilizan información de este tipo para geoposicionar
+                            a sus usuarios. <br>
+                            Disponer de grandes cantidades de este tipo de información puede resultar de
+                            mucha utilidad para la realización de estudios estadísticos con el objetivo de obtener
+                            información útil sobre los usuarios.
+                            </p>
+                            <p>
+                            Esta información geográfica suele representarse en mapas. Para ello contamos con librerías como
+                            <a href="https://developers.google.com/maps/documentation/javascript/" target="_blank">Google maps</a>
+                            o <a href="https://www.openstreetmap.org" target="_blank">OpenStreetMaps</a>. Próximamente escribiré un post
+                            sobre como generar diferentes tipos de mapas con el lenguaje R. En general estas librerías,
+                            dado el nombre de una zona (país, ciudad, municipio, ...) te proporcionan su ubicación. Este proceso se conoce como <a href="https://developers.google.com/maps/documentation/geocoding/intro" target="_blank">geocoding</a>.
+                            En mi caso, el problema que se me planteó fue el contrario: dado un punto geográfico necesitaba
+                            su información. Este proceso se conoce como <a href="https://developers.google.com/maps/documentation/geocoding/intro#ReverseGeocoding" target="_blank">reverse geocoding</a>.
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p>
+                            Dado un trazado GPS, es decir, una ruta por la isla de Mallorca; necesitaba saber por qué municipios
+                            de la isla pasaba. El problema lo podemos reducir a, dado un punto geográfico, obtener el municipio
+                            al que pertenece. <br>
+                            El geocoder de Google ya dispone de esta funcionalidad y con este simple código en JavaScript
+                            ya podemos obtener el municipio de un punto.
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div gist="https://gist.github.com/bertini36/7c6907f52fb16a7a495f.js"></div>
+                        </div>
+                        <div class="row">
+                            <p>
+                            Pero había un problema. Las rutas GPS disponen, cada una,  de una cantidad de puntos muy elevada
+                            y Google limita el número de peticiones a no ser que decidas invertir. Por esta razón tuve que
+                            buscar una alternativa: crear mi propio geocoder.
+                            </p>
+                            <p>
+                            La idea era realizar un geocoder que no requiriera internet para obtener el municipio de un punto.
+                            En la web del <a href="https://www.cnig.es/" target="_blank">Centro Nacional de Información Geográfica</a>
+                            disponen de archivos que definen las líneas fronterizas de los municipios de todas las províncias de España.
+                            Así que descargué las líneas municipales de Mallorca y las transformé a un formato más común:
+                            <a href="https://es.wikipedia.org/wiki/GPX" target="_blank">GPX</a>.
+                            Con los polígonos municipales definidos lo único que tuve que hacer fué un programa que comprobara
+                            la pertenencía de un punto a cada uno de los polígonos.
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div gist="https://gist.github.com/bertini36/6ea924b7585ffb25f90e.js"></div>
+                        </div>
+                        <div class="row">
+                            <p>
+                            El algoritmo, para comprobar la pertenencía de un punto a un polígono, se basa en el trazado de rayos.
+                            Consiste en trazar una recta y contar el número de intersecciones que se producen con el polígono.
+                            Si el número de intersecciones es impar quiere decir que el punto se encuentra en el interior del polígono.
+                            En contraposición, si el número de intersecciones es par, el punto se encuentra fuera del polígono.
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p>
+                            En el repositorio de <a href="https://github.com/bertini36/geocoderMallorca" target="_blank">Github</a>
+                            tenéis el código completo junto con los archivos GPX que definen las fronteras de cada municipio de Mallorca.
+                            </p>
+                        </div>
+
+                        <ul class="list-inline">
+                            <li>Fecha: 18/10/2015</li>
+                            <li>Autor: Alberto Pou Quirós</li>
+                        </ul>
+
+                        <!-- Comments -->
+                        <div class="row">
+                            {% include 'blog/partials/comments.html' with post=post %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+<!-- Posts template -->
+
+{% load staticfiles %}
+
+<div id="posts" class="container">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <h2 class="section-heading">Posts</h2>
+            <h3 class="section-subheading text-muted">Posts de informática</h3>
+        </div>
+    </div>
+    {% for post in posts %}
+        {% if forloop.counter|divisibleby:3 %}
+            <div class="row">
+        {% endif %}
+    <div class="col-md-4 col-sm-4 col-xs-12 portfolio-item">
+        <a href="" onclick="location.hash='#{{ post.slug }}'"
+           class="portfolio-link" data-toggle="modal">
+            <div class="portfolio-hover">
+                <div class="portfolio-hover-content">
+                    <i class="fa fa-plus fa-3x"></i>
+                    </div>
+                </div>
+            <img src="/media/{{ post.image }}" class="img-responsive" alt="">
+        </a>
+        <div class="portfolio-caption">
+            <h4>{{ post.name }}</h4>
+            <p class="text-muted">{{ post.technology }}</p>
+            </div>
+    </div>
+    {% if forloop.counter|divisibleby:3 %}
+        </div>
+    {% endif %}
+    {% endfor %}
+</div>

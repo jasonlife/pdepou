@@ -1,0 +1,2 @@
+#!/bin/sh
+java -jar "./utils/yuicompressor-2.4.7.jar" $@

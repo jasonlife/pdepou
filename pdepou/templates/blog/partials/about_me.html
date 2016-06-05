@@ -1,0 +1,88 @@
+<!-- About me template -->
+
+{% load staticfiles %}
+
+<div id="sobre-mi" class="container">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <h2 class="section-heading">Sobre mi</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <ul class="timeline">
+                <li>
+                    <div class="timeline-image">
+                        <img class="img-responsive"
+                             src="{% static 'img/about-me/la_salle.png' %}"
+                             alt="La Salle logo">
+                    </div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4>1995-2011</h4>
+                            <h4 class="subheading">La Salle</h4>
+                        </div>
+                        <div class="timeline-body">
+                            <p class="text-muted">
+                                Educación primaria, secundaria y bachiller.
+                            </p>
+                        </div>
+                    </div>
+                </li>
+                <li class="timeline-image">
+                    <div class="timeline-image">
+                        <img class="img-responsive"
+                             src="{% static 'img/about-me/uib.jpg' %}" alt="UIB logo">
+                    </div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4>2011-2015</h4>
+                            <h4 class="subheading">Universitat de les Illes Balears</h4>
+                        </div>
+                        <div class="timeline-body">
+                            <p class="text-muted">
+                                Graduado en Ingeniería Informática.
+                            </p>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="timeline-image">
+                        <a href="https://www.txerpa.com/" target="_blank">
+                            <img class="img-responsive"
+                                 src="{% static 'img/about-me/txerpa.png' %}" alt="Txerpa logo">
+                        </a>
+                    </div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4>2014-*</h4>
+                            <h4 class="subheading">Gestoría online Txerpa</h4>
+                        </div>
+                        <div class="timeline-body">
+                            <p class="text-muted">
+                                Colaborador en el desarrollo de una aplicación de facturación online.
+                            </p>
+                        </div>
+                    </div>
+                </li>
+                <li class="timeline-image">
+                    <div class="timeline-image">
+                        <img class="img-responsive"
+                             src="{% static 'img/about-me/upc.png' %}" alt="UPC logo">
+                    </div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4>2016-*</h4>
+                            <h4 class="subheading">Universitat Politècnica de Catalunya</h4>
+                        </div>
+                        <div class="timeline-body">
+                            <p class="text-muted">
+                                Máster en Ingeniería Informática.
+                            </p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
