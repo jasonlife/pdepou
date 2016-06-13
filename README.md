@@ -1,6 +1,5 @@
 ## P de Pou
 ---------------------
 
-
-Computer blog
+www.pdepou.com
 
