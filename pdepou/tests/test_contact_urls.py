@@ -16,7 +16,10 @@ class ContactClient(BaseTest):
         self.client = Client()
 
     def test_contact_post_url(self):
-        response = self.client.post('contact/contact/',
+        response = self.client.post('/contact/contact/',
                                     {'name': 'Ganondorf',
-                                     'email': '', 'text': ''})
+                                     'email': 'ganon@hyrule.zel',
+                                     'text': 'I welcome the hero time'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+                                    )
         assert response.status_code == 200
