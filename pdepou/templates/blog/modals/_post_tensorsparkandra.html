@@ -1,0 +1,164 @@
+<!-- Modal post Tensorflow & Spark & Cassandra -->
+
+{% load staticfiles %}
+
+<div class="portfolio-modal modal fade" id="modal_{{ post.id }}" tabindex="-1"
+     role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <a href="" onclick="location.hash='#posts'" class="close-modal"
+           data-dismiss="modal">
+            <div class="lr">
+                <div class="rl"></div>
+            </div>
+        </a>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="modal-body">
+                        <h2>{{ post.name }}</h2>
+                        <p class="item-intro text-muted">{{ post.technology }}</p>
+                        <img class="img-responsive img-centered"
+                             style="width: auto; height: 275px"
+                             src="{{ post.image.url }}" alt="">
+                        <div class="row">
+                            <p>
+                                En el mundo de la informática constantemente
+                                están apareciendo nuevas tecnologías. Muchas de
+                                ellas suelen ser de código libre y esto permite
+                                a los desarrolladores poder integrarlas e
+                                implementar nuevas aplicaciones más complejas.
+                                Hoy os voy a exponer un pequeño ejemplo que
+                                desarrollé con mi amigo <a
+                                    href="https://es.linkedin.com/in/francesc-sastre-cabot-5723587a"
+                                    target="_blank">Xisco Sastre</a> para la
+                                asignatura de Cloud Computing del Máster.
+                            </p>
+                            <p>
+                                En esta aplicación decidimos integrar 3
+                                tecnologías que actualmente están teniendo
+                                bastante impacto:
+                                <a href="https://www.tensorflow.org/"
+                                   target="_blank">Tensorflow</a>, <a
+                                    href="http://spark.apache.org/"
+                                    target="_blank">Spark</a>
+                                y <a href="http://cassandra.apache.org/"
+                                     target="_blank">Cassandra</a>. En primer
+                                lugar haré una breve explicación
+                                de cada una de estas tecnologías para luego
+                                explicar con más detalle la aplicación que
+                                desarrollamos.
+                            </p>
+                            <p>
+                            <h5 style="text-align: left">Tensorflow</h5>
+                            </p>
+                            <p>
+                            <h5 style="text-align: left">Spark</h5>
+                            </p>
+                            <p>
+                            <h5 style="text-align: left">Cassandra</h5>
+                            Cassandra es un sistema NoSQL distribuido y
+                            preparado para el Big Data creado por Facebook.
+                            Forma parte de la familia de NoSQL de bases de datos
+                            basadas en columnas. Básicamente fusionaron
+                            el <a
+                                href="https://aws.amazon.com/es/documentation/dynamodb/"
+                                target="_blank">Dynamo</a> de Amazon con el
+                            <a href="https://cloud.google.com/bigtable/?utm_source=google&utm_medium=cpc&utm_campaign=2015-q2-cloud-emea-bigdata-bkws-freetrial-en&gclid=CjwKEAjw7qi7BRCvsr3N58GvsTkSJAA3UzLvao8a6vtVPj5Gn_gEMstqFLyowyChD6cRG1C1hzRfcxoCfQfw_wcB"
+                               target="_blank">BigTable</a>
+                            de Google. De Dynamo cogieron la consistencia
+                            eventual y de BigTable su estructuración de los
+                            datos en columnas.
+                            </p>
+                            <p>
+                                Las bases de datos se pueden situar con respecto
+                                a estos 3 ejes: Consistencia, escalabilidad y
+                                disponibilidad.
+                                Existe una demostración que especifica que un
+                                sistema de base de datos sólo puede satisfacer 2
+                                de estos ejes.
+                                Como podéis ver, por ejemplo, las bases de datos
+                                relacionales se sitúan en la intersección entre
+                                consistencia
+                                y disponibilidad pero con la imposibilidad de
+                                particionar los datos. Mientras que Cassandra
+                                permite particionar
+                                fácilmente los datos y una alta disponibilidad
+                                de éstos.
+                            </p>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/post_tensorsparkandra/esquemaBDs.GIF' %}"
+                                         alt="Esquema bases de datos">
+                                    <figcaption>
+                                        <small>Esquema bases de datos</small>
+                                    </figcaption>
+                                </figure>
+                            </p>
+                            <p>
+                                Cassandra fue diseñado para manejar grandes
+                                cantidades de información a través de múltiples
+                                nodos. Su arquitectura
+                                se basa en el principio de que el sistema y el
+                                hardware pueden fallar. Cassandra solventa este
+                                problema formando
+                                un cluster en forma de anillo donde todos los
+                                nodos están al mismo nivel, es decir, no existe
+                                un nodo máster y otros nodos
+                                esclavos como pasa en otras arquitecturas. Estos
+                                nodos se comunican y comparten la información
+                                cada segundo usando el
+                                protocolo de comunicación P2P Gossip. Además
+                                Cassandra permite nivelar la consistencia de tu
+                                base de datos decidiendo
+                                sobre cuántos nodos se deben realizar las
+                                escrituras, sobre cuantos las lecturas y el
+                                nivel de replicación.
+                            </p>
+                            <p>
+                                La información se indexa y almacena en memoria
+                                pero cuando ésta se llena se pasa a almacenar en
+                                disco. Todas las escrituras
+                                son particionadas y replicadas automáticamente
+                                en el cluster.
+                                En Cassandra para recuperar un elemento siempre
+                                necesitamos la primary key. Al estar todos los
+                                nodos al mismo nivel se
+                                escogerá uno aleatoriamente que tendrá el rol de
+                                coordinador. Este nodo coordinador es el
+                                encargado de realizar la operación
+                                para el cliente, es decir, hace de proxy entre
+                                la aplicación cliente y los nodos que forman el
+                                cluster y determina a qué nodos del
+                                anillo tiene que realizar la petición en función
+                                del hash de la primary key, de la configuración
+                                del cluster y de la estrategia
+                                de replicación.
+                            </p>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/post_tensorsparkandra/cassandraRequest.jpg' %}"
+                                         alt="Esquema bases de datos">
+                                    <figcaption>
+                                        <small>Esquema de petición</small>
+                                    </figcaption>
+                                </figure>
+                            </p>
+                        </div>
+
+                        <ul class="list-inline">
+                            <li>Fecha: {{ post.date | date:"d/m/Y" }}</li>
+                            <li>Autor: Alberto Pou Quirós</li>
+                        </ul>
+
+                        <!-- Comments -->
+                        <div class="row">
+                            {% include 'blog/partials/comments.html' with post=post %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
