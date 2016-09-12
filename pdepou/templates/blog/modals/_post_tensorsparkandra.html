@@ -24,23 +24,25 @@
                             <p>
                                 En el mundo de la informática constantemente
                                 están apareciendo nuevas tecnologías. Muchas de
-                                ellas suelen ser de código libre y esto permite
-                                a los desarrolladores poder integrarlas e
-                                implementar nuevas aplicaciones más complejas.
-                                Hoy os voy a exponer un pequeño ejemplo que
-                                desarrollé con mi amigo <a
-                                    href="https://es.linkedin.com/in/francesc-sastre-cabot-5723587a"
-                                    target="_blank">Xisco Sastre</a> para la
-                                asignatura de Cloud Computing del Máster.
+                                ellas suelen ser de código libre
+                                y esto permite a los desarrolladores poder
+                                integrarlas e implementar nuevas aplicaciones.
+                                En este post os voy a mostrar
+                                un pequeño ejemplo de integración de tecnologías
+                                que desarrollé con mi amigo
+                                <a href="https://es.linkedin.com/in/francesc-sastre-cabot-5723587a"
+                                   target="_blank">Xisco Sastre</a> para la
+                                asignatura de
+                                Cloud Computing del máster.
                             </p>
                             <p>
                                 En esta aplicación decidimos integrar 3
                                 tecnologías que actualmente están teniendo
                                 bastante impacto:
                                 <a href="https://www.tensorflow.org/"
-                                   target="_blank">Tensorflow</a>, <a
-                                    href="http://spark.apache.org/"
-                                    target="_blank">Spark</a>
+                                   target="_blank">Tensorflow</a>,
+                                <a href="http://spark.apache.org/"
+                                   target="_blank">Spark</a>
                                 y <a href="http://cassandra.apache.org/"
                                      target="_blank">Cassandra</a>. En primer
                                 lugar haré una breve explicación
@@ -50,40 +52,174 @@
                             </p>
                             <p>
                             <h5 style="text-align: left">Tensorflow</h5>
+                            Se trata de una librería de código abierto para
+                            computación numérica mediante la utilización de
+                            grafos de flujo. Antes de la
+                            ejecución de un programa, Tensorflow construye un
+                            grafo de flujo donde los nodos representan
+                            operaciones matemáticas mientras
+                            que las aristas representan vectores
+                            multidimensionales de datos, a los que se les llama
+                            tensores. La construcción de este
+                            grafo le permite sacar el máximo partido tanto a las
+                            CPUs como a las GPUs del sistema donde se ejecute.
+                            Así, de forma completamente
+                            transparente al programador, Tensorflow paraleliza
+                            todo lo que puede entre los recursos de los que
+                            disponga.
+                            </p>
+                            <p>
+                                La librería dispone de implementaciones de
+                                diversos algoritmos analíticos (clustering,
+                                clasificación, optimización, ...) y,
+                                entre otras cosas, nos permite construir,
+                                entrenar y ejecutar redes neuronales de una
+                                forma sencilla.
+                                Una red neuronal es una función que aprende una
+                                salida para una entrada dada a partir de un
+                                conjunto de datos de entrenamiento.
+                                En otras palabras, un clasificador. Actualmente
+                                este campo, el Deep Learning, se encuentra en
+                                auge y una de sus principales
+                                aplicaciones es el reconocimiento de imágenes
+                                mediante redes neuronales convulacionales.
+                            </p>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/post_tensorsparkandra/classification.gif' %}"
+                                         alt="Clasificación mediante una red neuronal">
+                                    <figcaption>
+                                        <small>Clasificación mediante una red
+                                            neuronal
+                                        </small>
+                                    </figcaption>
+                                </figure>
+                            </p>
+                            <p>
+                                Entrenar una red neuronal es un proceso costoso.
+                                Una red neuronal más o menos simple ya puede
+                                contener varios miles de hiperparámetros
+                                o pesos (que es lo que durante el entrenamiento
+                                la red debe ajustar y aprender). Tensorflow ya
+                                reduce el tiempo de este
+                                entrenamiento, sin que el programador se de
+                                cuenta, paralelizando todo lo posible con las
+                                CPUs y GPUs de las que se disponga.
+                                No obstante, la librería también posee una serie
+                                de módulos, funcionalidades y modelos ya
+                                entrenados que pone a disposición de los
+                                desarrolladores. Entre los modelos entrenados de
+                                los que dispone cuenta con un clasificador de
+                                imágenes basado en una red neuronal
+                                convulacional (el último modelo de red diseñado
+                                por Google es Inception-v3) y entrenado con el
+                                dataset de
+                                <a href="http://image-net.org/" target="_blank">Imagenet</a>.
+                                Este clasificador lo podéis encontrar
+                                <a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/models/image/imagenet/classify_image.py"
+                                   target="_blank">aquí</a>.
+                                Para utilizarlo simplemente se tiene que
+                                ejecutar el siguiente comando en un entorno
+                                virtual con Tensorflow y todas sus dependencias:
+                            <div class="well"
+                                 style="text-align: left; margin-top: 2%; margin-bottom: 2%">
+                                <i>python classify_image.py
+                                    --image_file="path"</i>
+                            </div>
+                            La salida será un conjunto de clases con un peso
+                            asociado a cada una, el cual representa la
+                            probabilidad de pertenencia de
+                            la imagen a dicha clase.
                             </p>
                             <p>
                             <h5 style="text-align: left">Spark</h5>
+                            Apache Spark es un sistema para la computación de
+                            datos distribuida. Es el siguiente paso al modelo de
+                            programación
+                            <a href="https://en.wikipedia.org/wiki/MapReduce"
+                               target="_blank">MapReduce</a>. Con una sintaxi
+                            sencilla permite la distribución y
+                            computación de un dataset en un cluster. Spark
+                            mantiene la escalabilidad lineal (si la cantidad de
+                            datos aumenta pueden añadirse más
+                            máquinas al cluster y tardar lo mismo) y la
+                            tolerancia a fallos de MapReduce. <br>
+                            Cada tarea de Spark construye un grafo dirigido de
+                            etapas de trabajo para el cluster. La principal
+                            mejora con respecto a MapReduce es que
+                            Spark no necesita pasar el resultado entre etapas a
+                            disco sino que lo mantiene en memoria.
+                            </p>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/post_tensorsparkandra/sparkmodules.png' %}"
+                                         alt="Módulos de Spark"
+                                         style="margin-left: 8%">
+                                    <figcaption>
+                                        <small>Módulos de Spark</small>
+                                    </figcaption>
+                                </figure>
+                            </p>
+                            <p>
+                                Spark representa los datasets en una estructura
+                                llamada RDD (Resilient Distributed Dataset).
+                                Esta estructura
+                                permite realizar diferentes operaciones sobre el
+                                dataset distribuido en el cluster y puede
+                                manetenerse en memoria
+                                principal. En cuanto a las operaciones que
+                                podemos realizar sobre los datos (RDDs) tenemos
+                                de dos tipos:
+                            <ul>
+                                <li style="text-align: left">
+                                    <strong>Transformaciones: </strong> Dado un
+                                    RDD de entrada obtenemos un RDD de salida.
+                                    Ejemplos: map, filter, distinct, ...
+                                </li>
+                                <li style="text-align: left">
+                                    <strong>Acciones: </strong> Consiste en
+                                    aplicar una operación sobre los elementos de
+                                    un RDD. Ejemplos: reduce, count, collect,
+                                    ...
+                                </li>
+                            </ul>
+                            </p>
+                            <p>
+                                En el desarrollo de la aplicación utilizamos el
+                                módulo Spark Streaming para realizar streaming a
+                                Twitter.
                             </p>
                             <p>
                             <h5 style="text-align: left">Cassandra</h5>
                             Cassandra es un sistema NoSQL distribuido y
                             preparado para el Big Data creado por Facebook.
-                            Forma parte de la familia de NoSQL de bases de datos
-                            basadas en columnas. Básicamente fusionaron
-                            el <a
-                                href="https://aws.amazon.com/es/documentation/dynamodb/"
-                                target="_blank">Dynamo</a> de Amazon con el
+                            Forma parte de la familia de NoSQL de bases
+                            de datos basadas en columnas. Básicamente fusionaron
+                            el
+                            <a href="https://aws.amazon.com/es/documentation/dynamodb/"
+                               target="_blank">Dynamo</a> de Amazon con el
                             <a href="https://cloud.google.com/bigtable/?utm_source=google&utm_medium=cpc&utm_campaign=2015-q2-cloud-emea-bigdata-bkws-freetrial-en&gclid=CjwKEAjw7qi7BRCvsr3N58GvsTkSJAA3UzLvao8a6vtVPj5Gn_gEMstqFLyowyChD6cRG1C1hzRfcxoCfQfw_wcB"
                                target="_blank">BigTable</a>
-                            de Google. De Dynamo cogieron la consistencia
+                            de Google. De Dynamo adquirieron la consistencia
                             eventual y de BigTable su estructuración de los
                             datos en columnas.
                             </p>
                             <p>
                                 Las bases de datos se pueden situar con respecto
-                                a estos 3 ejes: Consistencia, escalabilidad y
-                                disponibilidad.
+                                a 3 ejes: consistencia, escalabilidad y
+                                disponibilidad de los datos.
                                 Existe una demostración que especifica que un
                                 sistema de base de datos sólo puede satisfacer 2
                                 de estos ejes.
-                                Como podéis ver, por ejemplo, las bases de datos
-                                relacionales se sitúan en la intersección entre
-                                consistencia
+                                Por ejemplo, las bases de datos relacionales se
+                                sitúan en la intersección entre consistencia
                                 y disponibilidad pero con la imposibilidad de
                                 particionar los datos. Mientras que Cassandra
                                 permite particionar
-                                fácilmente los datos y una alta disponibilidad
-                                de éstos.
+                                fácilmente los datos junto a una alta
+                                disponibilidad de éstos.
                             </p>
                             <p>
                                 <figure>
@@ -109,31 +245,28 @@
                                 nodos se comunican y comparten la información
                                 cada segundo usando el
                                 protocolo de comunicación P2P Gossip. Además
-                                Cassandra permite nivelar la consistencia de tu
-                                base de datos decidiendo
-                                sobre cuántos nodos se deben realizar las
-                                escrituras, sobre cuantos las lecturas y el
-                                nivel de replicación.
+                                Cassandra permite nivelar la consistencia de la
+                                base de datos decidiendo sobre cuántos nodos se
+                                deben realizar las escrituras, sobre cuántos las
+                                lecturas y el nivel de replicación.
                             </p>
                             <p>
                                 La información se indexa y almacena en memoria
                                 pero cuando ésta se llena se pasa a almacenar en
                                 disco. Todas las escrituras
                                 son particionadas y replicadas automáticamente
-                                en el cluster.
-                                En Cassandra para recuperar un elemento siempre
-                                necesitamos la primary key. Al estar todos los
-                                nodos al mismo nivel se
+                                en el cluster. En Cassandra para recuperar un
+                                elemento siempre necesitamos la primary key.
+                                Al estar todos los nodos al mismo nivel se
                                 escogerá uno aleatoriamente que tendrá el rol de
                                 coordinador. Este nodo coordinador es el
-                                encargado de realizar la operación
-                                para el cliente, es decir, hace de proxy entre
-                                la aplicación cliente y los nodos que forman el
-                                cluster y determina a qué nodos del
-                                anillo tiene que realizar la petición en función
-                                del hash de la primary key, de la configuración
-                                del cluster y de la estrategia
-                                de replicación.
+                                encargado de realizar la operación para el
+                                cliente, es decir, hace de proxy entre la
+                                aplicación cliente y los nodos que forman el
+                                cluster y determina a qué nodos del anillo tiene
+                                que realizar la petición en función del hash de
+                                la primary key, de la configuración
+                                del cluster y de la estrategia de replicación.
                             </p>
                             <p>
                                 <figure>
@@ -145,10 +278,111 @@
                                     </figcaption>
                                 </figure>
                             </p>
+                            <p>
+                            <h5 style="text-align: left">Configuración del
+                                cluster</h5>
+                            Decidimos utilizar estas 3 tecnologías para
+                            implementar una aplicación que dado un hashtag de
+                            Twitter monitorizara toda la subida
+                            de imágenes etiquetadas con dicho hashtag en tiempo
+                            real. Para posteriormente, realizar una
+                            clasificación de todas estas imágenes usando
+                            Tensorflow.
+                            Todo esto distribuyendo toda la información en un
+                            cluster con Spark y Cassandra.
+                            </p>
+                            <p>
+                                El cluster lo configuramos en <a
+                                    href="https://www.digitalocean.com/?refcode=98b3c0c5a987"
+                                    target="_blank">Digital Ocean</a>.
+                                Los nodos de Cassandra los creamos en base a
+                                <a href="https://www.digitalocean.com/community/tutorials/how-to-use-digitalocean-snapshots-to-automatically-backup-your-droplets"
+                                   target="_blank">snapshots</a>
+                                de los que ya dispone Digital Ocean. La
+                                instalación de Spark en los nodos del cluster la
+                                realizamos siguiendo las instrucciones de este
+                                <a href="http://blog.insightdatalabs.com/spark-cluster-step-by-step/"
+                                   target="_blank">tutorial</a>.
+                            </p>
+                            <p>
+                            <h5 style="text-align: left">Estructura de la
+                                aplicación</h5>
+                            </p>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/post_tensorsparkandra/structure.png' %}"
+                                         alt="Estructura de la aplicación">
+                                    <figcaption>
+                                        <small>Estructura de la aplicación
+                                        </small>
+                                    </figcaption>
+                                </figure>
+                            </p>
+                            <p>
+                            <ul style="text-align: left">
+                                <li>Conexión a Twitter LiveStream filtrando los
+                                    tweets por hashtag.
+                                </li>
+                                <li>Spark Streaming se encarga de trocear la
+                                    información que recibe de Twitter.
+                                </li>
+                                <li>
+                                    Para cada trozo:
+                                    <ul style="text-align: left">
+                                        <li>Filtramos los tweets que tienen
+                                            imágenes.
+                                        </li>
+                                        <li>
+                                            Usamos la función map de Spark para
+                                            crear un nuevo RDD el cual ya
+                                            disponga de la imagen descargada
+                                            y el resultado de la clasificación
+                                            de la imagen con Tensorflow.
+                                        </li>
+                                        <li>Almacenamos cada RDD resultante en
+                                            la base de datos de Cassandra.
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    Finalmente implementamos una pequeña
+                                    aplicación web mediante el framework
+                                    <a href="https://www.djangoproject.com/"
+                                       target="_blank">Django</a> para poder ver
+                                    fácilmente los resultados en tiempo real.
+                                </li>
+                            </ul>
+                            </p>
+                            <p>
+                            <h5 style="text-align: left">Código principal de la
+                                aplicación</h5>
+                            Para la implementación de la aplicación se decidió
+                            utilizar el lenguaje
+                            <a href="http://www.scala-lang.org/"
+                               target="_blank">Scala</a> puesto que dispone de
+                            las librerías de Spark y Twitter que necesitábamos.
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div gist="https://gist.github.com/bertini36/50b4302c5ec4a06707c50bbd35712487.js"></div>
+                            <p>
+                                Esta aplicación se desarrolló como un simple
+                                ejemplo de integración con el objetivo de
+                                demostrar que
+                                gracias al uso combinado de diversas tecnologías
+                                y de forma sencilla se pueden implementar nuevos
+                                módulos
+                                y aplicaciones más complejas. <br>
+                            </p>
+                            <p>
+                                <a href="https://github.com/bertini36/tensorsparkandra"
+                                   target="_blank">Código completo</a>
+                            </p>
                         </div>
 
                         <ul class="list-inline">
-                            <li>Fecha: {{ post.date | date:"d/m/Y" }}</li>
+                            <li>Fecha: 12/09/2016</li>
                             <li>Autor: Alberto Pou Quirós</li>
                         </ul>
 
