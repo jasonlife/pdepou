@@ -198,8 +198,8 @@ MEDIA_URL = '/media/'
 STATICS_VERSION = '2'
 STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
 PIPELINE_STORAGE = 'pipeline.storage.PipelineFinderStorage'
+PIPELINE_ENABLED = env('PIPELINE_ENABLED')
 PIPELINE = {
-    'PIPELINE_ENABLED': env('PIPELINE_ENABLED', default=False),
     'CSS_COMPRESSOR': 'pipeline.compressors.yui.YUICompressor',
     'JS_COMPRESSOR': 'pipeline.compressors.yui.YUICompressor',
     'YUI_BINARY': 'utils/yuic',

@@ -50,3 +50,6 @@ tests/.hitch
 
 # Fabbric properties
 /utils/properties.py
+
+# Steps deployd
+config/deployd.md
