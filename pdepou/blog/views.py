@@ -34,7 +34,7 @@ class PostView(AjaxResponseMixin, View):
         """
         post = get_object_or_404(Post, pk=request.GET.get('post_id'))
         return render(request, 'blog/modals/_{}.html'.format(post.slug),
-                      dictionary={'post': post})
+                      context={'post': post})
 
     def post_ajax(self, request, *args, **kwargs):
         """
@@ -50,4 +50,4 @@ class PostView(AjaxResponseMixin, View):
         send_email(contact, 'Comentario de {0} en el post {1}'
                    .format(name, post.name))
         return render(request, 'blog/partials/comment.html',
-                      dictionary={'comment': comment})
+                      context={'comment': comment})

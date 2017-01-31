@@ -8,13 +8,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 
 urlpatterns = [
-
     # Fake admin
     url(r'^admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
 
     # Django Admin, use {% url 'admin:index' %}
-                  url(r'{}'.format(settings.ADMIN_URL),
-                      include(admin.site.urls)),
+    url(r'{}'.format(settings.ADMIN_URL), include(admin.site.urls)),
 
     # Internal apps
     url(r'^', include('pdepou.blog.urls', namespace='blog')),
