@@ -121,7 +121,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'pipeline.middleware.MinifyHTMLMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 # TEMPLATE CONFIGURATION
