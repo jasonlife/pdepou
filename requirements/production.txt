@@ -3,4 +3,4 @@
 -r base.txt
 
 # WSGI Server
-gunicorn==19.3.0
+gunicorn==19.6.0
