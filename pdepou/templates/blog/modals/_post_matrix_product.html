@@ -1,0 +1,121 @@
+<!-- Modal post matrix product -->
+
+{% load staticfiles %}
+
+<div class="portfolio-modal modal fade" id="modal_{{ post.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <a href="" onclick="location.hash='#posts'" class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl"></div>
+            </div>
+        </a>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="modal-body">
+                        <h2>{{ post.name }}</h2>
+                        <p class="item-intro text-muted">{{ post.technology }}</p>
+                        <img class="img-responsive img-centered" style="width: 450px; height: 275px" src="{{ post.image.url }}" alt="">
+                        <div class="row">
+                            <p>
+                                Actualmente uno de los principales problemas de cualquier algoritmo es su facilidad para escalarlo, es decir,
+                                su facilidad para ejecutarlo en múltiples nucleos (paralelización) y nodos (distribución). La cantidad
+                                de datos de los que se dispone hoy en día ha llevado al mundo de la informática a desarrollar tecnologías
+                                con las que paralelizar y distribuir los procesos se haga cada vez de forma más fácil y automática.
+                                Actualmente, para cualquier algoritmo computacionalmente costoso se trabaja en su versión
+                                distribuida. De esta forma tareas como la búsqueda de números primos, simulaciones complejas o
+                                modelos estadísticos de predicción que tardarían centenares de años en obtener resultados
+                                pueden obtenerlos en pocas horas gracias al trabajo conjunto de muchos ordenadores.
+                            </p>
+                            <p>
+                                Precisamente a esto se dedican los centros de supercomputación como el
+                                <a href="https://www.bsc.es/" target="_blank">BSC</a>. El BSC dispone de un supercomputador,
+                                el Marenostrum III, que permite a sus usuarios ejecutar algoritmos muy costosos computacionalmente o con
+                                grandes cantidades de datos de forma distribuida. Concretamente Marenostrum III dispone de 3108 nodos
+                                de 2 procesadores con 8 nucleos cada uno (unos 49.728 nucleos).
+                            </p>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/post_matrix_product/marenostrum.jpg' %}"
+                                         alt="Marenostrum III supercomputer"
+                                         style="margin-left: 8%">
+                                    <figcaption><small>Marenostrum III</small></figcaption>
+                                </figure>
+                            </p>
+                            <p>
+                                En este post se enseñará mediante un ejemplo simple, el producto de matrices, como distribuir
+                                su computación en diversos nodos y como paralelizarlo en los diferentes nucleos de cada nodo.
+                                El producto matricial es una operación matemática que nos han enseñado a todos en el colegio pero
+                                que llevada al extremo de matrices muy grandes se convierte en una operación computacionalmente
+                                costosa.
+                            </p>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/post_matrix_product/matrix_product.png' %}"
+                                         alt="Matrix product"
+                                         style="margin-left: 18%">
+                                    <figcaption><small>Producto matricial</small></figcaption>
+                                </figure>
+                            </p>
+                            <p>
+                                Puesto que cada elemento de la matriz resultante no depende de ningún otro elemento de dicha matriz
+                                podemos distribuir sin ninguna restricción. Para este ejemplo se disponía de 4 nodos, por tanto, cada nodo
+                                se encargará de calcular un cuarto de la matriz resultante. Las matrices A y B se enviarán a cada uno
+                                de los nodos para que puedan realizar sus respectivos cálculos.
+                                Para la distribución se hace uso de la tecnología
+                                <a href="https://www.open-mpi.org/" target="_blank">MPI</a> (Message Passing Interface).
+                                Mediante las funciones de esta librería se puede compartir información entre nodos (
+                                lineas 123 y 124 del código) y especificar, utilizando el identificador del proceso,
+                                que parte de la matriz resultante debe calcular (líneas 116, 117 y 118 del código).
+                            </p>
+                            <p>
+                                Últimamente para la computación paralela se está aprovechando la potencionalidad de las
+                                GPUs. Concretamente, cada nodo con los que se trabajaba para este ejemplo disponía de
+                                una tarjeta gráfica Nvidia K80. Estas targetas gráficas de propósito general se pueden
+                                utilizar para la computación paralela mediante la plataforma
+                                <a href="https://en.wikipedia.org/wiki/CUDA" target="_blank">CUDA</a>
+                                (Compute Unified Device Architecture) de Nvidia. <br>
+                                Las GPUs son esencialmente un gran número de procesadores que pueden ser utilizados
+                                para acelerar algunas partes de un programa. Para ello el programa debe ser descompuesto
+                                en un elevado número de threads que se ejecutarán concurrentemente.
+                                En este ejemplo cada thread se encargará del cálculo de un elemento de la matriz resultante.
+                                En CUDA es necesario definir una estructura de bloque (grupo de hilos) delimitando el
+                                dominio de datos de cada thread mediante su threadId y su blockId (líneas 56 y 57).
+                                Estos threads ejecutarán un kernel, es decir, un programa de GPU
+                                (55-62: definición del kernel, 143: llamada al kernel).
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div gist="https://gist.github.com/bertini36/95b3843bdc608fc6a8232b43372bd677.js"></div>
+                        </div>
+                        <div class="row">
+                            <p>
+                                Uno de los principales problemas de CUDA es que para sacarle el máximo provecho se tienen que
+                                saber las especificaciones técnicas de la GPU sobre la que se va a ejecutar. El tamaño de bloque
+                                (número de threads) o el uso de la jerarquía de memoria de la tarjeta gráfica son aspectos
+                                que el programador tiene que tener en cuenta a la hora de programar con esta tecnología.
+                            </p>
+                            <p>
+                                En el repositorio de <a href="https://github.com/bertini36/distributedMatrixProduct" target="_blank">Github</a>
+                                encontraréis dos versiones más del producto de matrices, una únicamente usando MPI y la otra
+                                solo con CUDA. Además en la carpeta config hay dos scripts para ver las especificaciones de
+                                la tarjeta gráfica y una posible configuración de CUDA para dicha tarjeta.
+                            </p>
+                        </div>
+                        <ul class="list-inline">
+                            <li>Fecha: 02/02/2017</li>
+                            <li>Autor: Alberto Pou Quirós</li>
+                        </ul>
+
+                        <!-- Comments -->
+                        <div class="row">
+                            {% include 'blog/partials/comments.html' with post=post %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
