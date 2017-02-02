@@ -71,6 +71,14 @@
                                 que parte de la matriz resultante debe calcular (líneas 116, 117 y 118 del código).
                             </p>
                             <p>
+                                <figure>
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/post_matrix_product/distributed_matrix_product.png' %}"
+                                         alt="Distributed matrix product">
+                                    <figcaption><small>Distribución y paralelización del producto de matrices</small></figcaption>
+                                </figure>
+                            </p>
+                            <p>
                                 Últimamente para la computación paralela se está aprovechando la potencionalidad de las
                                 GPUs. Concretamente, cada nodo con los que se trabajaba para este ejemplo disponía de
                                 una tarjeta gráfica Nvidia K80. Estas targetas gráficas de propósito general se pueden
@@ -102,6 +110,11 @@
                                 encontraréis dos versiones más del producto de matrices, una únicamente usando MPI y la otra
                                 solo con CUDA. Además en la carpeta config hay dos scripts para ver las especificaciones de
                                 la tarjeta gráfica y una posible configuración de CUDA para dicha tarjeta.
+                            </p>
+                        </div>
+                        <div>
+                            <p>
+                                Próximamente Variational Inference...
                             </p>
                         </div>
                         <ul class="list-inline">
