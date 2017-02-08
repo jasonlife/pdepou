@@ -1,0 +1,214 @@
+<!-- Modal post Variational Inference parte 1 -->
+
+{% load staticfiles %}
+
+<div class="portfolio-modal modal fade" id="modal_{{ post.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <a href="" onclick="location.hash='#posts'" class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl"></div>
+            </div>
+        </a>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="modal-body">
+                        <h2>{{ post.name }}</h2>
+                        <p class="item-intro text-muted">{{ post.technology }}</p>
+                        <img class="img-responsive img-centered" style="width: 600px; height: 275px" src="{{ post.image.url }}" alt="">
+                        <div class="row">
+                            <p>
+                                En los próximos posts os voy a hablar sobre probabilistic machine learning, una rama del machine learning que esta cogiendo
+                                bastante importancia en los últimos años. Llevo unos 5 meses aprendiendo sobre este campo, concretamente sobre Variational
+                                Inference, y creo que puede ser interesante redactar una serie de posts explicando todo lo que he aprendido sobre estos
+                                temas gracias a mi sensei Joan Capdevila.
+                            </p>
+                            <h3>Probabilistic Machine Learning</h3>
+                            <p>
+                                Un modelo es una descripción compacta de unos datos que nos permite hacer predicciones sobre futuras muestras. La principal
+                                diferencia entre un modelo de machine learning convencional y un modelo probabilístico es que este último nos permite modelar
+                                la incertidumbre, es decir, nos permite saber con qué probabilidad se cumplirá la predicción. Este aspecto puede ser muy
+                                valioso en áreas como la medicina o la economía donde el riesgo de tomar una decisión u otra puede ser perjudicial para la
+                                salud de un ser humano o suponer una pérdida económica.
+                            </p>
+                            <p>
+                                Este tipo de modelos utiliza  probabilidades para modelar información a priori, de esta forma el algoritmo no se basa
+                                únicamente en los datos de la muestra. También permiten el uso de diferentes datasets de los que aprender, son muy útiles
+                                cuando se quieren modelar probabilidades de muchas cosas y pueden definir modelos complejos con la cantidad de variables
+                                aleatorias que se requieran. Estos modelos soportan online learning, es decir, no hace falta reentrenar todo el modelo cada
+                                vez que se obtengan nuevos datos sino que simplemente se actualizan las probabilidades. Por otro lado son muy útiles para
+                                la toma de decisiones, cuando se requiere una explicación robusta del modelo. En definitiva, se trata de modelos generativos
+                                que dan respuesta a múltiples preguntas.
+                            </p>
+                            <p>
+                                A diferencia de los modelos discriminantes que solo modelan la probabilidad de la variable a predecir, un modelo generativo
+                                es un modelo probabilístico completo sobre todas las variables (observadas y latentes). Estos modelos pueden utilizarse para
+                                simular valores de cualquier variable aleatoria del modelo. Los modelos discriminantes, al no modelar la probabilidad de los
+                                datos (la probabilidad de las variables observadas) no pueden modelar relaciones complejas entre las variables observadas
+                                y las latentes cosa que los modelos probabilísticos si permiten.
+                            </p>
+                            <p>
+                                La construcción de este tipo de modelos con variables latentes se hace siguiendo el Box Loop. El Box loop es un esquema
+                                sobre el cual se itera repetidas veces durante la construcción de un modelo probabilístico.
+                            </p>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/posts_variational_inference/box_loop.png' %}"
+                                         alt="Box loop">
+                                    <figcaption>
+                                        <small>Box loop</small>
+                                    </figcaption>
+                                </figure>
+                            </p>
+                            <p>
+                                <ol type="1" style="text-align: left">
+                                    <li>Primero se construye el modelo probabilístico en base a los conocimientos que se tienen sobre ese entorno.</li>
+                                    <li>En segundo lugar se descubren patrones en los datos utilizando el modelo definido previamente y un método de inferencia.</li>
+                                    <li>Finalmente se valida el modelo. Si no fuera lo suficientemente bueno se volvería al paso 1 y sino se utilizaría para describir
+                                        o predecir nuevos datos.</li>
+                                </ol>
+                            </p>
+                            <h3>Bayesian inference</h3>
+                            <h4>Regla de Bayes</h4>
+                            <p>
+                                Lo primero que hay que tener claro para entender la inferencia Bayesiana es la regla de Bayes. La regla de Bayes nos indica como
+                                debe actualizarse una probabilidad a priori sobre un suceso después de observar evidencias sobre dicho suceso.
+                            </p>
+                            <p>
+                                <figure style="padding-left: 40%">
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/posts_variational_inference/bayes_rule.png' %}"
+                                         alt="Bayes rule">
+                                </figure>
+                            </p>
+                            <p>
+                                A continuación se explica qué son cada uno de los términos de la fórmula siendo x y &theta; los datos y los parámetros del modelo respectivamente:
+                                <ul style="text-align: left">
+                                    <li>Posterior p(&theta;|x): Es la probabilidad de los parámetros dados los datos. En otras palabras, la probabilidad de que el modelo con los
+                                        parámetros &theta; haya generado los datos x. El posterior es la incógnita en inferencia Bayesiana.</li>
+                                    <li>Likelihood p(x|&theta;): Es la probabilidad de los datos dados los parámetros.</li>
+                                    <li>Prior p(&theta;): Es la probabilidad de los parámetros. En este factor de la formula es donde se refleja el conocimiento a priori
+                                        que tenemos sobre el modelo (la información que tenemos antes de observar ningún dato) puesto que no depende de x.</li>
+                                    <li>Evidence p(x): Se trata de la evidencia de los datos. Se calcula como &int; p(x,&theta;)d&theta;</li>
+                                </ul>
+                            </p>
+                            <p>
+                                El resumen de esta fórmula sería el siguiente: inicialmente se tiene una creencia (prior) sobre un evento &theta; (p(&theta;)). Después
+                                se observa la evidencia (x). En función de esta evidencia la creencia sobre &theta; debe cambiar, este cambio lo refleja el posterior
+                                (p(&theta;|x)). El producto p(&theta;|x)p(&theta;) es la probabilidad conjunta: p(&theta;, x).
+                            </p>
+                            <p>
+                                Los algoritmos de inferencia del posterior nos permiten analizar información bajo ciertas suposiciones (priors) infiriendo la estructura
+                                oculta que mejor describe nuestros datos. Cuando todas las relaciones entre las variables aleatorias del modelo son
+                                <a href="https://en.wikipedia.org/wiki/Conjugate_prior" target="_blank">conjugadas</a>
+                                el posterior se puede calcular de forma analítica, es el caso de modelos como el Dirichlet-Categorical o Normal Inverse Wishart-Normal.
+                                En el caso contrario, el problema de esta fórmula reside en el cálculo de la evidencia. Para muchos modelos de interés (no conjugados)
+                                el cálculo del posterior es intratable computacionalmente por culpa de la integral sobre todas las variables latentes de los datos
+                                que conlleva el cálculo de la evidencia. Para estos modelos se requiere de otra estrategia para la obtención del posterior por esa razón
+                                el cálculo del posterior se convierte en un problema de aproximación.
+                            </p>
+                            <h4>Aproximación del posterior</h4>
+                            <p>
+                                El concepto de inferencia Bayesiana viene del conjunto de técnicas que se han desarrollado para la aproximación del posterior en modelos
+                                complejos o no conjugados. Actualmente existen dos ramas algorítmicas para la aproximación del posterior en inferencia Bayesiana.
+                                <ul style="text-align: left">
+                                    <li><a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo" target="_blank">Markov Chain Monte Carlo (MCMC)</a>:
+                                        Sampling approximate inference.</li>
+                                    <li><a href="https://en.wikipedia.org/wiki/Variational_Bayesian_methods" target="_blank">Variational Inference (VI)</a>:
+                                        Structural aproximate inference.</li>
+                                </ul>
+                            </p>
+                            <p>
+                                Por un lado, MCMC se basa en la construcción de una cadena de Markov sobre las variables latentes siendo su distribución estacionaria
+                                el posterior. Después se ejecuta la cadena hasta que llega al punto de equilibrio. Finalmente se muestrea el resultado para aproximar
+                                el posterior. Los algoritmos más conocidos de esta família son
+                                <a href="https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm" target="_blank">Metropolis–Hastings</a> y
+                                <a href="https://en.wikipedia.org/wiki/Gibbs_sampling" target="_blank">Gibbs sampling</a>.
+                            </p>
+                            <p>
+                                Por otro lado, VI aproxima el posterior creando una aproximación analítica, el modelo variacional, el cual va ajustando con
+                                el objetivo de reducir la distáncia con el posterior. En esta família de algoritmos el problema deja de ser de aproximación
+                                para ser de optimización.
+                            </p>
+                            <h3>Variational inference</h3>
+                            <p>
+                                En los próximos posts nos centraremos en las diferentes estrategías variacionales para la aproximaciónn del posterior.
+                            </p>
+                            <h4>Estrategia</h4>
+                            <p>
+                                Como ya se ha comentado VI consiste en definir una distribución, q(&theta;|&lambda;), cuyos parámetros &lambda; se irán optimizando
+                                con el objetivo de reducir sus diferencias con el posterior real p(&theta;|x). Esta nueva distribución es conocida como modelo
+                                variacional y el posterior real como modelo probabilístico. En resumen, el objetivo es optimizar los parámetros &lambda; del
+                                modelo variacional q(&theta;|&lambda;) de forma que se vaya reduciendo la distancia con el modelo probabilístico p(&theta;|x).
+                                A &lambda; también se lo conoce con el nombre de parámetros variacionales.
+                            </p>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/posts_variational_inference/variational_inference.jpg' %}"
+                                         alt="Variational inference">
+                                </figure>
+                            </p>
+                            <h4>Kullback-Leibler divergence</h4>
+                            <p>
+                                Calcular la distancia Euclidea entre los parámetros de las distribuciones para establecer la similitud entre ambas es una medida
+                                demasiado imperfecta puesto que estamos comparando distribuciones y no puntos. <br>
+                                Imaginemos una distribución Normal con media 0 y varianza 5, N(0, 5), y otra con media 5 y varianza 5, N(5, 5). Estas dos
+                                distribuciones son muy parecidas pero se encuentran a una distancia Euclidea de 5. Si ahora comparamos la primera normal, N(0, 5),
+                                con otra normal con media 2 y varianza 7, N(2, 7), parece que son bastante diferentes pero la distancia Euclidea entre ellas es 4.
+                                Por esta razón debemos utilizar otra medida de similitud diferente a la Euclidea: la Kullback-Leibler divergence. <br>
+                                La Kullback-Leibler divergence es una medida de distancia no simétrica (divergencia), es decir, no es lo mismo calcular
+                                la KL[p(&theta;|x)||q(&theta;|&lambda;)] que la KL[q(&theta;|&lambda;)||p(&theta;|x)]. El hecho de usar una u otra da lugar
+                                a algoritmos diferentes:
+                                <a href="https://tminka.github.io/papers/ep/minka-ep-uai.pdf" target="_blank">Expectation Propagation</a> usa la Kullback-Leibler
+                                de p a q mientras que VI usa la Kullback-Leibler de q a p que se define como:
+                            </p>
+                            <p>
+                                <figure style="padding-left: 32%">
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/posts_variational_inference/kl_rule.png' %}"
+                                         alt="Kullback-Leibler definition">
+                                </figure>
+                            </p>
+                            <p>
+                                Esta divergencia nos permite encontrar la similitud real entre dos distribuciones de probabilidad y es la medida de similitud
+                                que el algoritmo de VI minimiza.
+                            </p>
+                            <h4>Mean-Field assumption</h4>
+                            <p>
+                                Con el objetivo de definir una distribución tratable sobre todas las variables latentes para aproximar el posterior se simplifica
+                                la optimización del modelo variacional suponiendo que se trata de un modelo factorizado. Esto es suponer que q(&theta;|&lambda;)
+                                esta compuesta por un conjunto de distribuciones q<sub>i</sub>(&theta;<sub>i</sub>|&lambda;<sub>i</sub>) (de la
+                                <a href="https://en.wikipedia.org/wiki/Exponential_family" target="_blank">família exponencial</a>).
+                                Cada una de estas distribuciones tiene sus parámetros &lambda;<sub>i</sub> los cuales son optimizables individualmente.
+                            </p>
+                            <p>
+                                <figure style="padding-left: 40%">
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/posts_variational_inference/mean_field.png' %}"
+                                         alt="Mean-Field assumption">
+                                </figure>
+                            </p>
+                            <br>
+                            <div class="well">
+                                Este post no tiene otro fin mas que introducir el concepto de Variational Inference, el cual se explicará más profundamente
+                                en los próximos posts, junto con sus diferentes variantes y las herramientas que existen para la programación de este tipo de modelos.
+
+                            </div>
+                        </div>
+                        <ul class="list-inline">
+                            <li>Fecha: 08/02/2017</li>
+                            <li>Autor: Alberto Pou Quirós</li>
+                        </ul>
+
+                        <!-- Comments -->
+                        <div class="row">
+                            {% include 'blog/partials/comments.html' with post=post %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

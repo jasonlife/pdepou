@@ -7,6 +7,11 @@ body {
     font-family: "Roboto Slab","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+sub {
+    vertical-align: sub;
+    font-size: smaller;
+}
+
 .text-muted {
     color: #777;
 }
