@@ -40,6 +40,16 @@
                                 u otra puede ser perjudicial para la salud de un ser humano o suponer una pérdida económica.
                             </p>
                             <p>
+                                <figure>
+                                    <img class="img-responsive" style="width: 50%; margin-left: 24%"
+                                         src="{% static 'img/posts/posts_variational_inference/esquema_situacion.png' %}"
+                                         alt="Probabilistic Machine Learning situation">
+                                    <figcaption>
+                                        <small>Situación del Probabilistic Machine Learninge n el área de la inteligencia artifical</small>
+                                    </figcaption>
+                                </figure>
+                            </p>
+                            <p>
                                 Este tipo de modelos utiliza la teoría de probabilidad para modelar información a priori, de
                                 esta forma el algoritmo no se basa únicamente en los datos de la muestra. También permiten
                                 el uso de diferentes datasets de los que aprender, son muy útiles cuando se quieren modelar
@@ -108,14 +118,23 @@
                                         parámetros &theta; haya generado los datos x. El posterior es la incógnita en inferencia bayesiana.</li>
                                     <li><strong>Likelihood p(x|&theta;)</strong>: Es la probabilidad de los datos dados los parámetros.</li>
                                     <li><strong>Prior p(&theta;)</strong>: Es la probabilidad de los parámetros. En este factor de la formula es donde se refleja el conocimiento a priori
-                                        que tenemos sobre el modelo (la información que tenemos antes de observar ningún dato) puesto que no depende de x.</li>
+                                        que tenemos sobre el modelo (la información que tenemos antes de observar ningún dato).</li>
                                     <li><strong>Evidence p(x)</strong>: Se trata de la evidencia de los datos. Se calcula como &int; p(x,&theta;)d&theta;</li>
                                 </ul>
                             </p>
                             <p>
-                                El resumen de esta fórmula sería el siguiente: inicialmente se tiene una creencia (prior) sobre un evento &theta; (p(&theta;)). Después
-                                se observa la evidencia (x). En función de esta evidencia la creencia sobre &theta; debe cambiar, este cambio lo refleja el posterior
-                                (p(&theta;|x)). El producto p(&theta;|x)p(&theta;) es la probabilidad conjunta: p(&theta;, x).
+                                El producto p(&theta;|x)p(&theta;) es la probabilidad conjunta: p(&theta;, x).
+                            </p>
+                            <p>
+                                El resumen de esta fórmula sería el siguiente: inicialmente se tiene una creencia (prior) sobre
+                                un evento θ (p(θ)), por ejemplo, que la altura de la población de Barcelona sigue una distribución
+                                Normal. Después se observa la evidencia (x), una muestra de las alturas de la población de
+                                Barcelona. En función de esta evidencia la creencia sobre θ debe cambiar, es decir, la
+                                distribución Normal que describía la altura de la población de Barcelona se actualizará.
+                                Este cambio lo refleja el posterior (p(θ|x)). Es en este ejemplo donde se puede apreciar
+                                claramente el soporte de online learning que permiten este tipo de modelos.
+                                Al final se trata de un proceso iterativo de actualización de unas creencias (prior)
+                                en base a unas evidencias (x). El posterior de una iteración será el prior de la siguiente.
                             </p>
                             <p>
                                 Los algoritmos de inferencia del posterior nos permiten analizar información bajo ciertas suposiciones (priors) infiriendo la estructura
@@ -179,12 +198,38 @@
                                 </figure>
                             </p>
                             <p>
-                                En este contexto p(x|y) representa la probabilidad condicional en la cual la distribución de x
-                                depende del valor de y.
+                                En este contexto p(x|y) representa la probabilidad condicional en la cual la distribución de <i>x</i>
+                                depende del valor de y. En este tipo de diagramas también existen unos componentes llamados plates.
+                            </p>
+                            <p>
+                                <figure style="padding-left: 44%">
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/posts_variational_inference/plate.png' %}"
+                                         alt="Plate">
+                                </figure>
+                            </p>
+                            <p>
+                                Esta notación indica un vector de n variables aleatorias <i>x</i>.
+                            </p>
+                            <h4>Variables locales y globales</h4>
+                            <p>
+                                En un modelo probabilístico se pueden distinguir dos tipos de variables aleatorías: globales y
+                                locales. Una variable global es aquella que comparten todos los ejemplos del dataset mientras
+                                que una variable local es propia de cada ejemplo. Por ejemplo, en el siguiente probabilistic
+                                graphical model la variable <i>y</i> es una variable local mientras que la variable <i>z</i> es una variable
+                                global. Cuando un nodo aparece oscurecido quiere decir que se trata de un nodo de datos.
+                            </p>
+                            <p>
+                                <figure style="padding-left: 36%">
+                                    <img class="img-responsive"
+                                         src="{% static 'img/posts/posts_variational_inference/global_local_variables.png' %}"
+                                         alt="Model example">
+                                </figure>
                             </p>
                             <h3>Variational inference</h3>
                             <p>
-                                En los próximos posts nos centraremos en las diferentes estrategías variacionales para la aproximaciónn del posterior.
+                                En los próximos posts nos centraremos en las diferentes estrategías variacionales para la
+                                aproximación del posterior.
                             </p>
                             <h4>Estrategia</h4>
                             <p>
@@ -280,8 +325,8 @@
                                 jugadores. En los próximos posts se entrará en más profundidad en estos algoritmos y se mostrarán las herramientas existentes
                                 para la programación de este tipo de modelos. <br>
                             </div>
+                            Bienvenidos a Matrix
                             <p>
-                                Bienvenidos a Matrix
                             </p>
                             <h5>Referencias</h5>
                             <p>
