@@ -1,0 +1,277 @@
+<!-- Modal post Variational Inference parte 2 -->
+
+{% load staticfiles %}
+
+<div class="portfolio-modal modal fade" id="modal_{{ post.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <a href="" onclick="location.hash='#posts'" class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl"></div>
+            </div>
+        </a>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="modal-body">
+                        <h2>{{ post.name }}</h2>
+                        <p class="item-intro text-muted">{{ post.technology }}</p>
+                        <img class="img-responsive img-centered" style="width: 600px; height: 275px" src="{{ post.image.url }}" alt="">
+                        <div class="row">
+                            <p>
+                                En este post continuaré con la explicación que introduje en el
+                                <a href="http://pdepou.com/#post_variational_inference_1" target="_blank">post anterior</a> sobre Variational Inference (VI). <br>
+                                En primer lugar se demostrará que para encontrar la mejor aproximación del posterior se requiere minimizar la Kullback-Leibler divergence(KL) entre el
+                                modelo variacional q(θ|λ) y el modelo probabilístico p(θ|x). <br>
+                                Partiendo de la regla de Bayes tenemos:
+                                <figure>
+                                    <img class="img-responsive" style="width: 70%; margin-left: 16%"
+                                         src="{% static 'img/posts/posts_variational_inference/ELBO_derivation.png' %}"
+                                         alt="ELBO derivation">
+                                </figure>
+                            </p>
+                            <p>
+                                Esta expresión nos da una forma más asequible de calcular la evidencia de nuestro modelo donde cada uno de los factores es:
+                            </p>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive" style="width: 100%; margin-left: 0%"
+                                         src="{% static 'img/posts/posts_variational_inference/ELBO_explanation.png' %}"
+                                         alt="ELBO explanation">
+                                </figure>
+                            </p>
+                            <p>
+                                Con esta demostración se llega a que minimizar KL[q(θ|λ)||p(θ|x)] es equivalente a maximizar la <br>
+                                ELBO(q(θ|λ),p(x,θ)), la cual es más fácil de evaluar. Al final lo que se ha hecho es convertir una
+                                intengral intratable en la expectation de una distribución conocida.
+                            </p>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive" style="width: 50%; margin-left: 23%"
+                                         src="{% static 'img/posts/posts_variational_inference/kullback_leibler.png' %}"
+                                         alt="ELBO">
+                                    <figcaption>
+                                        <small>Maximizar la ELBO es equivalente a minimizar la distancia entre el modelo variacional y el probabilístico.</small>
+                                    </figcaption>
+                                </figure>
+                            </p>
+                            <p>
+                                VI utiliza la ELBO como condición de parada del algoritmo. Cuando se llega a un conjunto de iteraciones donde el valor de la ELBO
+                                no aumenta más quiere decir que se han encontrado unos parámetros λ para el modelo variacional que consiguen aproximar mucho
+                                el modelo probabilístico (el posterior). Ahora podemos reescribir la ELBO como:
+                            </p>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive" style="width: 65%; margin-left: 20%"
+                                         src="{% static 'img/posts/posts_variational_inference/ELBO_reescritura.png' %}"
+                                         alt="Reescritura ELBO">
+                                </figure>
+                            </p>
+                            <p>
+                                Donde cada término es:
+                                <figure>
+                                    <img class="img-responsive" style="width: 85%; margin-left: 10%"
+                                         src="{% static 'img/posts/posts_variational_inference/ELBO_terminos.png' %}"
+                                         alt="Términos ELBO">
+                                </figure>
+                            </p>
+                            <p>
+                                Y si ahora se tiene en cuenta la Mean-Field assumption comentada en el <a href="http://pdepou.com/#post_variational_inference_1" target="_blank">post anterior</a>, la
+                                ELBO queda de la siguiente manera:
+                                <figure>
+                                    <img class="img-responsive" style="width: 65%; margin-left: 20%"
+                                         src="{% static 'img/posts/posts_variational_inference/ELBO_MeanField.png' %}"
+                                         alt="ELBO with Mean Field assumption">
+                                </figure>
+                            </p>
+                            <h3>Algoritmo Variational Inference</h3>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive" style="width: 90%; margin-left: 5%"
+                                         src="{% static 'img/posts/posts_variational_inference/VI.png' %}"
+                                         alt="Variational Inference Algorithm">
+                                </figure>
+                                Este algoritmo representa la idea básica de VI. En la práctica hay que tener en cuenta más cosas para poner en marcha este algoritmo.
+                                En primer lugar un modelo variacional puede componerse de variables locales y variables globales y la actualización de éstas debe
+                                hacerse de una forma concreta. También se debe definir el método de inferencia: Coordinate Ascent, Gradient Ascent, Sthocastic Gradient Descent, ...
+                                El método de inferencia que se elija no influye en la estructura básica del algoritmo de VI, únicamente cambia la forma de obtener
+                                el nuevo valor de los parámetros λ del modelo variacional en cada una de las iteraciones. En todo esto se entrará en más profundidad
+                                en los próximos apartados.
+                            </p>
+                            <h3>Coordinate Ascent Variational Inference</h3>
+                            <p>
+                                A continuación se explica el método más tradicional para la inferencia de modelos probabilísticos: Coordinate Ascent Variational Inference (CAVI).
+                                Para la implementación de este tipo de inferencia es necesario tener unos amplios conocimientos de estadística bayesiana pues para la actualización
+                                de cada parámetro λ del modelo variacional y para el cálculo de la ELBO se derivan unas fórmulas analíticas cerradas. Como ya se ha
+                                mencionado anteriormente cuando el modelo es completamente conjugado (Dirichlet-Categorical model o Normal Inverse Wishart-Normal model) el
+                                posterior se puede calcular analíticamente, es decir, sin necesidad de aproximarlo. No obstante si la cantidad de datos disponibles para este
+                                modelo es muy grande este cálculo analítico del posterior se vuelve impracticable debido a la operabilidad con matrices muy grandes en memoria.
+                                Por tanto, en este caso y en el caso de modelos no conjugados es acertado aproximar el posterior mediante VI.
+                            </p>
+                            <p>
+                                La derivación de las actualizaciones analíticas de los parámetros del modelo variacional se puede realizar de dos formas:
+                                por derivación genérica o mediante las propiedades de la
+                                <a href="https://en.wikipedia.org/wiki/Exponential_family" target="_blank">Exponential Family</a>.
+                            </p>
+                            <p>
+                                La derivación genérica se basa en la siguiente fórmula (suponiendo la Mean-Field assumption):
+                                <figure>
+                                    <img class="img-responsive" style="width: 40%; margin-left: 29%"
+                                         src="{% static 'img/posts/posts_variational_inference/generic_derivation.png' %}"
+                                         alt="Generic derivation">
+                                </figure>
+                                Esta derivación se haría para cada variable del modelo variacional θ<small>i</small> y tras la derivación un estadístico podría deducir
+                                la forma de la distribución que debe tener el parámetro en el modelo variacional y como actualizar el parámetro de
+                                dicha distribución.
+                            </p>
+                            <p>
+                                Otra forma de obtener las actualizaciones de los parámetros variacionales es derivarlos mediante las propiedades de la
+                                Exponential Family. A esta familia pertencen todas las distribuciones que se pueden escribir de la forma:
+                                <figure>
+                                    <img class="img-responsive" style="width: 40%; margin-left: 30%"
+                                         src="{% static 'img/posts/posts_variational_inference/exponential_family.png' %}"
+                                         alt="Exponential family">
+                                </figure>
+                                <ul style="text-align: left">
+                                    <li>h(x): Base measure.</li>
+                                    <li>η(θ): Natural parameters(solo depende de los parámetros).</li>
+                                    <li>t(x): Sufficient statistics(solo depende de los datos). Permite saber la forma que tiene la distribución.
+                                        Describe el espacio posible para los parámetros de la distribución.</li>
+                                    <li>a(η(θ)): Cumulante. Es un normalizador.</li>
+                                </ul>
+                                Esta família permite establecer relaciones de conjugación entre distribuciones. Cuando al crear la distribución conjunta en base
+                                a otras dos distribuciones los natural parameters de una permiten alguna simplificación en la formulación junto a los
+                                sufficient statistics de la otra decimos que la primera distribución es conjugada de la segunda. De esta manera la
+                                distribución resultante tendrá la misma forma que la primera distribución. Los modelos conjugados, como ya se ha dicho,
+                                gracias a estas simplificaciones, permiten calcular analíticamente el posterior.
+                            </p>
+                            <h4>Algoritmo Coordinate Ascent Variational Inference</h4>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive" style="width: 90%; margin-left: 5%"
+                                         src="{% static 'img/posts/posts_variational_inference/CAVI.png' %}"
+                                         alt="Coordinate Ascent Variational Inference Algorithm">
+                                </figure>
+                                En esta versión del algoritmo de CAVI ya se ha hecho la distinción entre la actualización de variables locales
+                                y globales del modelo.
+                            </p>
+                            <h3>Gradient Ascent Variational Inference</h3>
+                            <p>
+                                Una alternativa más ilusa con respecto a CAVI es Gradient Ascent Variational Inference (GAVI). La diferencia reside en
+                                el hecho de que la actualización de los parámetros variacionales no se hace con unas fórmulas analíticamente
+                                cerradas derivadas por un estadístico sino que es un proceso mucho más exploratorio. GAVI se basa en el algoritmo
+                                Gradient Descent/Ascent.
+                            </p>
+                            <h4>Gradient Ascent</h4>
+                            <p>
+                                Gradient Ascent tiene como objetivo maximizar una función de coste C(λ) parametrizada por los parámetros del modelo, λ.
+                                El algoritmo va optimizando estos parámetros λ en la dirección del gradiente (en el caso de Gradient Descent,
+                                en la dirección opuesta del gradiente) de la función objetivo ∇<small>λ</small>C(λ).
+                            </p>
+                            <p>
+                                En nuestro caso nos interesa Gradient Ascent puesto que lo que se busca es maximizar una función: la ELBO. El learning rate
+                                η>0 determina el tamaño del paso en la dirección del máximo local. En definitiva, Gradient Ascent explora el espacio
+                                de variables latentes del modelo y se desplaza en la dirección de máxima pendiente (la que le indica el gradiente de
+                                la función de coste) hasta encontrar un montículo (máximo local). Los parámetros del modelo variacional se actualizan
+                                de la siguiente manera:
+                                <figure>
+                                    <img class="img-responsive" style="width: 20%; margin-left: 40%"
+                                         src="{% static 'img/posts/posts_variational_inference/gradient.png' %}"
+                                         alt="Gradient application">
+                                </figure>
+                            </p>
+                            <p>
+                                Durante los últimos años han ido apareciendo optimizaciones de este algoritmo de optimización: Momentum, Adagrad, Adadelta,
+                                RMSprop, Adam, ... las mejoras de los cuales se basan en aspectos tales como que cada parámetro λ<small>i</small> tenga
+                                su propio learning rate η<small>i</small> o teniendo en cuenta el valor de los gradientes de iteraciones anteriores
+                                para calcular el siguiente.
+                            </p>
+                            <h4>Algoritmo Gradient Ascent Variational Inference</h4>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive" style="width: 90%; margin-left: 5%"
+                                         src="{% static 'img/posts/posts_variational_inference/GAVI.png' %}"
+                                         alt="Gradient Ascent Variational Inference Algorithm">
+                                </figure>
+                            </p>
+                            <p>
+                                Un problema de este algoritmo para la aproximación del posterior, el cual provoca unas convergencias más inexactas,
+                                es la utilización del gradiente para la optimización de los parámetros variacionales. El gradiente supone que el espacio
+                                de variables latentes es un espacio Euclideo. Este hecho implica la suposición de que la distancia entre las distribuciones
+                                se mide mediante la distancia Euclidea entre sus parámetros. La solución a este problema para encontrar la distancia
+                                real entre dos distribuciones pasa por utilizar el gradiente natural.
+                                <figure>
+                                    <img class="img-responsive" style="width: 30%; margin-left: 35%"
+                                         src="{% static 'img/posts/posts_variational_inference/natural_gradient.png' %}"
+                                         alt="Natural gradient definition">
+                                </figure>
+                                El gradiente natural indica la dirección de máxima pendiente en un espacio, el espacio de Riemman, donde se tiene en cuenta
+                                la distancia real entre distribuciones y se puede calcular premultiplicando el gradiente normal por la inversa de la matriz
+                                de Fisher, G(λ).
+                            </p>
+                            <p>
+                                <figure>
+                                    <img class="img-responsive" style="width: 40%; margin-left: 30%"
+                                         src="{% static 'img/posts/posts_variational_inference/natural_gradient2.png' %}"
+                                         alt="Natural gradient definition">
+                                </figure>
+                                En el caso de CAVI, cuando se derivan las actualizaciones analíticas de cada parámetro variacional ya se está teniendo en
+                                cuenta la forma de las distribuciones para medir la distancia.
+                            </p>
+                            <h3>Problemas de eficiencia</h3>
+                            <p>
+                                Hoy en día, en la ya conocida como era de la información, los algoritmos que se utilizan para el machine learning
+                                utilizan grandes volúmenes de datos. Esto provoca que los programadores escalen los algoritmos o diseñen alternativas
+                                menos costosas computacionalmente. En el caso de CAVI y GAVI se hace una pasada por todos los datos del dataset en
+                                cada iteración del algoritmo. Este procedimiento para datasets muy grandes es impracticable. En los próximos posts
+                                se mostrará como solventar esta problemática.
+                            </p>
+                            <h5>Referencias</h5>
+                            <p>
+                                <ul style="text-align: left">
+                                    <li>
+                                        Journal of the American Statistical AssociationGeorge
+                                        (E. P. Box)
+                                    </li>
+                                    <li>
+                                        Build, Compute, Critique, Repeat: Data Analysis with Latent Variable Models
+                                        (David M. Blei)
+                                    </li>
+                                    <li>
+                                        Probabilistic graphical models: principles and techniques
+                                        (Koller, Daphne, and Nir Friedman)
+                                    </li>
+                                    <li>
+                                        Model-based Machine Learning
+                                        (Christopher M. Bishop)
+                                    </li>
+                                    <li>
+                                        Machine Learning. A probabilistic perspective
+                                        (Kevin P. Murphy)
+                                    </li>
+                                    <li>
+                                        An overview of gradient descent optimization algorithms
+                                        (Sebastian Rudes)
+                                    </li>
+                                    <li>
+                                        Variational Bayesian inference (slides)
+                                        (Kay H. Brodersen)
+                                    </li>
+                                </ul>
+                            </p>
+                        </div>
+                        <ul class="list-inline">
+                            <li>Fecha: 25/02/2017</li>
+                            <li>Autor: Alberto Pou Quirós</li>
+                        </ul>
+
+                        <!-- Comments -->
+                        <div class="row">
+                            {% include 'blog/partials/comments.html' with post=post %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
